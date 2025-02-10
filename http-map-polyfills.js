@@ -1,3 +1,5 @@
+const { KeyObject } = require("crypto");
+
 (() => {
   const objDoProp = function (obj, prop, def, enm, mut) {
     return Object.defineProperty(obj, prop, {
@@ -301,6 +303,21 @@
     })();
 
     (() => {
+      objFillProp(
+        Headers.prototype,
+        "findKey",
+        function findKey(callbackfn, thisArg) {
+          // `Map.prototype.findKey` method
+          // https://github.com/tc39/proposal-collection-methods
+          const boundFunction = callbackfn.bind(thisArg);
+          for (const [key, value] of this) {
+            if (boundFunction(value, key, this)) return key;
+          }
+        },
+      );
+    })();
+
+    (() => {
       objFillProp(Headers.prototype, "getAll", function getAll(key) {
         if (!this.has(key)) return [];
         if (/set-cookie/i.test(key)) return this.getSetCookie();
@@ -427,6 +444,58 @@
         "updateOrInsert",
         function updateOrInsert() {
           return applyMethod(this, "upsert", arguments);
+        },
+      );
+    })();
+
+    (() => {
+      objFillProp(Headers.prototype, "keyOf", function keyOf(searchElement) {
+        for (const [key, value] of this) {
+          if (value === searchElement) {
+            return key;
+          }
+        }
+      });
+    })();
+
+    (() => {
+      objFillProp(
+        Headers.prototype,
+        "getOrInsert",
+        function getOrInsert(key, value) {
+          if (this.has(key)) {
+            return this.get(key);
+          }
+          this.set(key, value);
+          return value;
+        },
+      );
+    })();
+
+    (() => {
+      objFillProp(
+        Headers.prototype,
+        "getOrInsertComputed",
+        function getOrInsertComputed(key, fn) {
+          if (this.has(key)) {
+            return this.get(key);
+          }
+          const value = fn(key);
+          this.set(key, value);
+          return value;
+        },
+      );
+    })();
+
+    (() => {
+      objFillProp(
+        Headers.prototype,
+        "reduce",
+        function reduce(callbackfn, accumulator) {
+          for (const [key, value] of this) {
+            accumulator = callbackfn(accumulator, value, key, this);
+          }
+          return accumulator;
         },
       );
     })();
@@ -560,6 +629,21 @@
     })();
 
     (() => {
+      objFillProp(
+        URLSearchParams.prototype,
+        "findKey",
+        function findKey(callbackfn, thisArg) {
+          // `Map.prototype.findKey` method
+          // https://github.com/tc39/proposal-collection-methods
+          const boundFunction = callbackfn.bind(thisArg);
+          for (const [key, value] of this) {
+            if (boundFunction(value, key, this)) return key;
+          }
+        },
+      );
+    })();
+
+    (() => {
       new URLSearchParams().size ??
         Object.defineProperty(URLSearchParams.prototype, "size", {
           get() {
@@ -682,6 +766,62 @@
         "updateOrInsert",
         function updateOrInsert() {
           return applyMethod(this, "upsert", arguments);
+        },
+      );
+    })();
+
+    (() => {
+      objFillProp(
+        URLSearchParams.prototype,
+        "keyOf",
+        function keyOf(searchElement) {
+          for (const [key, value] of this) {
+            if (value === searchElement) {
+              return key;
+            }
+          }
+        },
+      );
+    })();
+
+    (() => {
+      objFillProp(
+        URLSearchParams.prototype,
+        "getOrInsert",
+        function getOrInsert(key, value) {
+          if (this.has(key)) {
+            return this.get(key);
+          }
+          this.set(key, value);
+          return value;
+        },
+      );
+    })();
+
+    (() => {
+      objFillProp(
+        URLSearchParams.prototype,
+        "getOrInsertComputed",
+        function getOrInsertComputed(key, fn) {
+          if (this.has(key)) {
+            return this.get(key);
+          }
+          const value = fn(key);
+          this.set(key, value);
+          return value;
+        },
+      );
+    })();
+
+    (() => {
+      objFillProp(
+        URLSearchParams.prototype,
+        "reduce",
+        function reduce(callbackfn, accumulator) {
+          for (const [key, value] of this) {
+            accumulator = callbackfn(accumulator, value, key, this);
+          }
+          return accumulator;
         },
       );
     })();
@@ -808,6 +948,21 @@
           const boundFunction = callbackfn.bind(thisArg);
           for (const [key, value] of this) {
             if (boundFunction(value, key, this)) return value;
+          }
+        },
+      );
+    })();
+
+    (() => {
+      objFillProp(
+        FormData.prototype,
+        "findKey",
+        function findKey(callbackfn, thisArg) {
+          // `Map.prototype.findKey` method
+          // https://github.com/tc39/proposal-collection-methods
+          const boundFunction = callbackfn.bind(thisArg);
+          for (const [key, value] of this) {
+            if (boundFunction(value, key, this)) return key;
           }
         },
       );
@@ -950,7 +1105,57 @@
         },
       );
     })();
-    
+
+    (() => {
+      objFillProp(FormData.prototype, "keyOf", function keyOf(searchElement) {
+        for (const [key, value] of this) {
+          if (value === searchElement) {
+            return key;
+          }
+        }
+      });
+    })();
+
+    (() => {
+      objFillProp(
+        FormData.prototype,
+        "getOrInsert",
+        function getOrInsert(key, value) {
+          if (this.has(key)) {
+            return this.get(key);
+          }
+          this.set(key, value);
+          return value;
+        },
+      );
+    })();
+
+    (() => {
+      objFillProp(
+        FormData.prototype,
+        "getOrInsertComputed",
+        function getOrInsertComputed(key, fn) {
+          if (this.has(key)) {
+            return this.get(key);
+          }
+          const value = fn(key);
+          this.set(key, value);
+          return value;
+        },
+      );
+    })();
+
+    (() => {
+      objFillProp(
+        FormData.prototype,
+        "reduce",
+        function reduce(callbackfn, accumulator) {
+          for (const [key, value] of this) {
+            accumulator = callbackfn(accumulator, value, key, this);
+          }
+          return accumulator;
+        },
+      );
+    })();
   })();
-  
 })();
