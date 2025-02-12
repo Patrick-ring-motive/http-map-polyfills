@@ -27,4 +27,8 @@
       (x) => !Object.getOwnPropertyNames(URLSearchParams.prototype).includes(x),
     ),
   );
+
+  console.log(new Map().keys());
+
+  console.log(new Map().entries());
 })();

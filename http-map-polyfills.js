@@ -1,4 +1,3 @@
-const { KeyObject } = require("crypto");
 
 (() => {
   const objDoProp = function (obj, prop, def, enm, mut) {
