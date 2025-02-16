@@ -16,7 +16,7 @@
   const isFunction = (x) => typeof x === "function" || constructOf(x,Function);
   const isString = (x) => typeof x === "string" || constructOf(x,String);
   const isArray = (x) =>
-    Array.isArray(x) || cobstructOf(x,Array);
+    Array.isArray(x) || constructOf(x,Array);
 
 
   function carbonCopy(x){
