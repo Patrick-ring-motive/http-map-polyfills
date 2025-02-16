@@ -147,9 +147,10 @@
   function Obj(value) {
     if (value === null) return new Null();
     if (value === undefined) return new Undefined();
-    const x = Object(value.valueOf());
-    if (x !== value) return x;
-    return pureProxy(value);
+    const x = Object(value?.valueOf?.()??value);
+    return x;
+    //if (x !== value) return x;
+    //return pureProxy(value);
   }
 
   //map
@@ -1159,6 +1160,6 @@
     })();
   })();
   }catch(e){
-    document.body.innerText = e.message;
+    console.warn(e);
   }
 })();
