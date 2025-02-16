@@ -31,7 +31,7 @@
   const isFunction = (x) => typeof x === "function" || x instanceof Function;
   const isString = (x) => typeof x === "string" || x instanceof String;
   const isArray = (x) =>
-    Array.isArray(x) || x instanceof Array || instanceOf(x, TypedArray);
+    Array.isArray(x) || x instanceof Array;
   const applyMethod = ($this, fn, args) => $this[fn].apply($this, args);
   const enact = (fn, args) => fn.apply(undefined, args);
   const arr = (x) => Array.from(x);
