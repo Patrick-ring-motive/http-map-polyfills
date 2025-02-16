@@ -1,5 +1,6 @@
 
 (() => {
+  try{
   const objDoProp = function (obj, prop, def, enm, mut) {
     return Object.defineProperty(obj, prop, {
       value: def,
@@ -1157,4 +1158,7 @@
       );
     })();
   })();
+  }catch(e){
+    document.body.innerText = e.message;
+  }
 })();
