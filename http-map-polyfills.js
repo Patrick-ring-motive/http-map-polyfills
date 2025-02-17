@@ -208,6 +208,7 @@
         $delete.call(this, key);
         return has;
       });
+      objDefProp(Headers.prototype.delete, "name", "delete");
     })();
 
     (() => {
@@ -530,6 +531,7 @@
         $delete.call(this, key);
         return has;
       });
+      objDefProp(URLSearchParams.prototype.delete, "name", "delete");
     })();
 
     (() => {
@@ -855,6 +857,7 @@
         $delete.call(this, key);
         return has;
       });
+      objDefProp(FormData.prototype.delete, "name", "delete");
     })();
 
     (() => {

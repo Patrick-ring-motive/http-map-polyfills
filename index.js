@@ -31,4 +31,6 @@
   console.log(new Map().keys());
 
   console.log(new Map().entries());
+
+  import("./carbon-copy.js");
 })();
