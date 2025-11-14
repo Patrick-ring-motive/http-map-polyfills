@@ -16,6 +16,7 @@
   };
   const objDefProp = (obj, prop, def) => objDoProp(obj, prop, def, false, true);
   const isNullish = (x) => x === null || x === undefined;
+  const isObject = x => ['function','object'].includes(typeof x) && x != null;
   const objFillProp = (obj, prop, value) => {
     if (isNullish(obj[prop])) {
       return objDefProp(obj, prop, value);
@@ -348,6 +349,23 @@
     })();
   })();
   }
+  (()=>{
+    const $FormData = FormData;
+    const _FormData = class FormData extends $FormData{
+      constructo(...args){
+        if(instanceOf(args[0],Q(()=>HTMLFormElement)){
+          return super(...args);
+        }
+        let kv = [];
+        super();
+        if(isString(args[0])){
+          
+        }
+      }
+    };
+    globalThis.FormData = _FormData;
+  })();
+    
   }catch(e){
     console.warn(e);
   }
