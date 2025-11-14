@@ -28,10 +28,10 @@
     return x === y || (x !== x && y !== y);
   };
   const TypedArray = Uint8Array?.__proto__;
-  const isFunction = (x) => typeof x === "function" || x instanceof Function;
-  const isString = (x) => typeof x === "string" || x instanceof String;
+  const isFunction = (x) => typeof x === "function" || instanceOf(x,Function) || x?.constructor?.name == 'Function';
+  const isString = (x) => typeof x === "string" || instanceOf(x, String) || x?.constructor?.name == 'String';
   const isArray = (x) =>
-    Array.isArray(x) || x instanceof Array;
+    Array.isArray(x) || instanceOf(x,Array) || x?.constructor?.name == 'Array';
   const applyMethod = ($this, fn, args) => $this[fn].apply($this, args);
   const enact = (fn, args) => fn.apply(undefined, args);
   const arr = (x) => Array.from(x);
