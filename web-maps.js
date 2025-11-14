@@ -44,7 +44,6 @@
   
   
   for(const $Map of [Q(()=>Headers) ?? {}, Q(()=>FormData) ?? {}, Q(()=>URLSearchParams) ?? {}]){
-  //headers
   (() => {
     if (!$Map) continue;
 
@@ -160,13 +159,13 @@
     })();
 
     (() => {
+      // `Map.prototype.findKey` method
+      // https://github.com/tc39/proposal-collection-methods
       objFillProp(
         $Map.prototype,
         "findKey",
-        function findKey(callbackfn, thisArg) {
-          // `Map.prototype.findKey` method
-          // https://github.com/tc39/proposal-collection-methods
-          const boundFunction = callbackfn.bind(thisArg);
+        function findKey(callbackfn,  thisArg) {
+         const boundFunction = callbackfn.bind(thisArg);
           for (const [key, value] of this) {
             if (boundFunction(value, key, this)) return key;
           }
@@ -177,7 +176,7 @@
     (() => {
       objFillProp($Map.prototype, "getAll", function getAll(key) {
         if (!this.has(key)) return [];
-        if (/set-cookie/i.test(key)) return this.getSetCookie();
+        if (/set-cookie/i.test(key)) return this.getSetCookie?.() ?? String(this.get(key)).split(", ");
         return String(this.get(key)).split(", ");
       });
     })();
