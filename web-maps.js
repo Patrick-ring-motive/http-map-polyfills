@@ -352,14 +352,22 @@
   (()=>{
     const $FormData = FormData;
     const _FormData = class FormData extends $FormData{
-      constructo(...args){
+      constructor(...args){
         if(instanceOf(args[0],Q(()=>HTMLFormElement)){
           return super(...args);
         }
         let kv = [];
         super();
         if(isString(args[0])){
-          
+          kv = new URLSearchParams(...args);
+        }
+        if(args[0]?.[Symbol.iterator]){
+          kv = args[0];
+        }else if(isObject(args[0]){
+          kv = Object.entries(args[0]);
+        }
+        for(const [key,value] of kv){
+          this.append(key,value);
         }
       }
     };
