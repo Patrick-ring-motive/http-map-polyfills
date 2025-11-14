@@ -46,10 +46,10 @@
   for(const $Map of [Q(()=>Headers) ?? {}, Q(()=>FormData) ?? {}, Q(()=>URLSearchParams) ?? {}]){
   //headers
   (() => {
-    if (!globalThis.Headers) return;
+    if (!$Map) continue;
 
     (() => {
-      objFillProp(Headers.prototype, "clear", function clear() {
+      objFillProp($Map.prototype, "clear", function clear() {
         for (const [key, _] of this) {
           this.delete(key);
         }
@@ -57,19 +57,19 @@
     })();
 
     (() => {
-      const $delete = Headers.prototype.delete;
-      objDefProp(Headers.prototype, "delete", function _delete(key) {
+      const _delete = $Map.prototype.delete;
+      objDefProp($Map.prototype, "delete", function $delete(key) {
         const has = this.has(key);
-        $delete.call(this, key);
+        _delete.call(this, key);
         return has;
       });
-      objDefProp(Headers.prototype.delete, "name", "delete");
+      objDefProp($Map.prototype.delete, "name", "delete");
     })();
 
     (() => {
       // `Map.prototype.emplace` method
       // https://github.com/tc39/proposal-upsert
-      objFillProp(Headers.prototype, "emplace", function emplace(key, handler) {
+      objFillProp($Map.prototype, "emplace", function emplace(key, handler) {
         if (this.has(key)) {
           const current = this.get(key);
           if (handler.update) {
@@ -91,15 +91,15 @@
       // `Map.prototype.filter` method
       // https://github.com/tc39/proposal-collection-methods
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "filter",
         function filter(callbackfn, thisArg) {
           const fn = callbackfn.bind(thisArg);
-          const fd = new Headers();
+          const $map = new $Map();
           for (const [key, value] of this) {
-            if (fn(value, key, this)) fd.append(key, value);
+            if (fn(value, key, this)) $map.append(key, value);
           }
-          return fd;
+          return $map;
         },
       );
     })();
@@ -108,7 +108,7 @@
       // `Map.prototype.some` method
       // https://github.com/tc39/proposal-collection-methods
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "some",
         function some(callbackfn, thisArg) {
           const fn = callbackfn.bind(thisArg);
@@ -124,7 +124,7 @@
       // `Map.prototype.every` method
       // https://github.com/tc39/proposal-collection-methods
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "every",
         function every(callbackfn, thisArg) {
           const fn = callbackfn.bind(thisArg);
@@ -139,7 +139,7 @@
     (() => {
       // `Map.prototype.includes` method
       // https://github.com/tc39/proposal-collection-methods
-      objFillProp(Headers.prototype, "includes", function includes() {
+      objFillProp($Map.prototype, "includes", function includes() {
         return applyMethod(Array.from(this.values()), "includes", arguments);
       });
     })();
@@ -148,7 +148,7 @@
       // `Map.prototype.find` method
       // https://github.com/tc39/proposal-collection-methods
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "find",
         function find(callbackfn, thisArg) {
           const boundFunction = callbackfn.bind(thisArg);
@@ -161,7 +161,7 @@
 
     (() => {
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "findKey",
         function findKey(callbackfn, thisArg) {
           // `Map.prototype.findKey` method
@@ -175,7 +175,7 @@
     })();
 
     (() => {
-      objFillProp(Headers.prototype, "getAll", function getAll(key) {
+      objFillProp($Map.prototype, "getAll", function getAll(key) {
         if (!this.has(key)) return [];
         if (/set-cookie/i.test(key)) return this.getSetCookie();
         return String(this.get(key)).split(", ");
@@ -183,8 +183,8 @@
     })();
 
     (() => {
-      new Headers().size ??
-        Object.defineProperty(Headers.prototype, "size", {
+      new $Map().size ??
+        Object.defineProperty($Map.prototype, "size", {
           get() {
             return Array.from(this.entries()).length;
           },
@@ -195,10 +195,10 @@
 
     (() => {
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "mapValues",
         function mapValues(callbackFn, thisArg = this) {
-          const retObj = new Headers();
+          const retObj = new $Map();
           for (const [key, value] of this) {
             const newValue = Reflect.apply(callbackFn, thisArg, [
               value,
@@ -214,10 +214,10 @@
 
     (() => {
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "mapKeys",
         function mapKeys(callbackFn, thisArg = this) {
-          const retObj = new Headers();
+          const retObj = new $Map();
           for (const [key, value] of this) {
             const newKey = Reflect.apply(callbackFn, thisArg, [
               value,
@@ -232,31 +232,21 @@
     })();
 
     (() => {
-      objFillProp(Headers.prototype, "merge", function merge(...args) {
-        const headers = new Headers(this);
+      objFillProp($Map.prototype, "merge", function merge(...args) {
+        const $map = new $Map(this);
         for (const item of args) {
-          const itemHeaders = new Headers(item);
-          for (const [key, value] of itemHeaders) {
-            headers.append(key, value);
+          const itemMap = new $Map(item);
+          for (const [key, value] of itemMap) {
+            $map.append(key, value);
           }
         }
-        return headers;
-      });
-    })();
-
-    (() => {
-      objFillProp(Headers, "from", function from(obj) {
-        try {
-          return new Headers(new URLSearchParams(obj));
-        } catch {
-          return new Headers(new URLSearchParams(Object.entries(obj)));
-        }
+        return $map;
       });
     })();
 
     (() => {
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "upsert",
         function upsert(key, updateFn, insertFn) {
           let value;
@@ -276,7 +266,7 @@
     })();
 
     (() => {
-      objFillProp(Headers.prototype, "deleteAll", function deleteAll(keys) {
+      objFillProp($Map.prototype, "deleteAll", function deleteAll(keys) {
         let all = true;
         for (const key of keys) {
           all = all && this.delete(key);
@@ -287,7 +277,7 @@
 
     (() => {
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "update",
         function update(key, callback, thunk) {
           this.set(key, callback(this.get(key) ?? thunk(key, this), key, this));
@@ -298,7 +288,7 @@
 
     (() => {
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "updateOrInsert",
         function updateOrInsert() {
           return applyMethod(this, "upsert", arguments);
@@ -307,7 +297,7 @@
     })();
 
     (() => {
-      objFillProp(Headers.prototype, "keyOf", function keyOf(searchElement) {
+      objFillProp($Map.prototype, "keyOf", function keyOf(searchElement) {
         for (const [key, value] of this) {
           if (value === searchElement) {
             return key;
@@ -318,7 +308,7 @@
 
     (() => {
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "getOrInsert",
         function getOrInsert(key, value) {
           if (this.has(key)) {
@@ -332,7 +322,7 @@
 
     (() => {
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "getOrInsertComputed",
         function getOrInsertComputed(key, fn) {
           if (this.has(key)) {
@@ -347,7 +337,7 @@
 
     (() => {
       objFillProp(
-        Headers.prototype,
+        $Map.prototype,
         "reduce",
         function reduce(callbackfn, accumulator) {
           for (const [key, value] of this) {
