@@ -240,7 +240,7 @@
         "filter",
         function filter(callbackfn, thisArg) {
           const fn = callbackfn.bind(thisArg);
-          const fd = new FormData();
+          const fd = new Headers();
           for (const [key, value] of this) {
             if (fn(value, key, this)) fd.append(key, value);
           }
@@ -377,10 +377,11 @@
     })();
 
     (() => {
-      objFillProp(Headers.prototype, "merge", function merge() {
+      objFillProp(Headers.prototype, "merge", function merge(...args) {
         const headers = new Headers(this);
-        for (const iter of Array.from(arguments)) {
-          for (const [key, value] of new Headers(iter)) {
+        for (const item of args) {
+          const itemHeaders = new Headers(item);
+          for (const [key, value] of itemHeaders) {
             headers.append(key, value);
           }
         }
@@ -567,7 +568,7 @@
         "filter",
         function filter(callbackfn, thisArg) {
           const fn = callbackfn.bind(thisArg);
-          const fd = new FormData();
+          const fd = new URLSearchParams();
           for (const [key, value] of this) {
             if (fn(value, key, this)) fd.set(key, value);
           }
