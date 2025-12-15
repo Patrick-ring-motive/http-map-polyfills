@@ -370,6 +370,7 @@
                     }
                 }
             };
+            $FormData.prototype.constructor = _FormData;
             globalThis.FormData = _FormData;
         })();
 
